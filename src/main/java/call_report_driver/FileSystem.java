@@ -4,10 +4,17 @@ import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Map;
 
 public class FileSystem {
     //класс для работы с вводом/выводом через файлы
-    public static void readInputFile(String fileName) throws IOException {
+    CDR_Reader cdrReader;
+    ReportDriver reportDriver;
+    FileSystem() {
+        cdrReader = new CDR_Reader();
+        reportDriver = new ReportDriver();
+    }
+    public void readInputFile(String fileName) throws IOException {
         FileInputStream fileInputStream = new FileInputStream(fileName);
         BufferedInputStream inputStream = new BufferedInputStream(fileInputStream, 52);
 
@@ -17,8 +24,7 @@ public class FileSystem {
             if((char)i != '\n'){
                 newCdrRecord+=(char)i;
             } else {
-                System.out.println(newCdrRecord);
-                //обработка полученной строки
+                cdrReader.processCdrRecord(newCdrRecord);
                 newCdrRecord = "";
             }
         }
@@ -26,10 +32,15 @@ public class FileSystem {
         fileInputStream.close();
     }
 
-    public static void newReport(String directoryName) throws IOException{
-        FileOutputStream fileOutputStream = new FileOutputStream(directoryName);
-        //создание нового отчета
-        fileOutputStream.write("new report".getBytes());
-        fileOutputStream.close();
+    public void createReports(String directoryName) throws IOException{
+        String reportText;
+
+        for (Map.Entry<String, Subscriber> entry: Main.subscribersBase.entrySet()) {
+            FileOutputStream fileOutputStream = new FileOutputStream(directoryName + "\\" + entry.getKey() + "report.txt");
+            reportText =  reportDriver.doMagic(entry.getValue()); //TODO: написать логику создания нового отчета
+            fileOutputStream.write(reportText.getBytes());
+
+            fileOutputStream.close();
+        }
     }
 }
