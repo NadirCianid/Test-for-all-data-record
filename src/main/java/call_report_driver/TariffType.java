@@ -8,23 +8,13 @@ public enum TariffType {
     TariffType(String tariffCode, double priceRate, int bonusPeriod, double bonusPeriodRate) {
         this.TARIFF_CODE = tariffCode;
         this.PRICE_RATE = priceRate;
-        this.bonusPeriod = bonusPeriod;
+        this.BONUS_PERIOD = bonusPeriod;
         this.BONUS_PERIOD_RATE = bonusPeriodRate;
     }
     private final String TARIFF_CODE;
     private final double PRICE_RATE;
     private final double BONUS_PERIOD_RATE;
-    private  int bonusPeriod;
-
-    public int useBonusPeriod(int callDuration) {
-        if(bonusPeriod > 0) {
-            bonusPeriod -= callDuration;
-        } else if(bonusPeriod < 0) {
-            bonusPeriod  = 0;
-        }
-        return bonusPeriod; // если остаток бонусного периода меньше, чем длительность звонка,
-                            // то метод вернет количество минут не попавших в бонусный период со знаком минус (-5)
-    }
+    private final int BONUS_PERIOD;
 
     public double getPRICE_RATE() {
         return PRICE_RATE;
@@ -34,8 +24,16 @@ public enum TariffType {
         return BONUS_PERIOD_RATE;
     }
 
+    public String getTARIFF_CODE() {
+        return TARIFF_CODE;
+    }
+
     @Override
     public String toString() {
         return TARIFF_CODE;
+    }
+
+    public int getBONUS_PERIOD() {
+        return BONUS_PERIOD;
     }
 }
