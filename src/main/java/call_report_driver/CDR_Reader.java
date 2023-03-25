@@ -18,7 +18,7 @@ public class CDR_Reader {
 
         if(Main.subscribersBase.containsKey(subscriberNumber)) {
             currentSubscriber =  Main.subscribersBase.get(subscriberNumber);
-           currentSubscriber.newCallRecord(callType, startTime, endTime, currentSubscriber.getTariffType());
+           currentSubscriber.newCallRecord(callType, startTime, endTime);
         } else {
             Subscriber newSubscriber = new Subscriber(subscriberNumber, tariffType, callType, startTime, endTime);
             Main.subscribersBase.put(subscriberNumber, newSubscriber);

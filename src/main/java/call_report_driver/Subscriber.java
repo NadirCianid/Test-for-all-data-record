@@ -27,12 +27,21 @@ public class Subscriber {
         }
         bonusPeriod = this.tariffType.getBONUS_PERIOD();
 
-        newCallRecord(callType, startTime, endTime, this.tariffType);
+        newCallRecord(callType, startTime, endTime);
     }
 
-    public void newCallRecord(String  callType, String startTime, String endTime, TariffType tariffType) {
-        callHistory.put(startTime, new Call(callType, startTime, endTime, tariffType, this));
-        totalCost += getCallHistory().get(startTime).getCost();
+    public void newCallRecord(String  callType, String startTime, String endTime) {
+        callHistory.put(startTime, new Call(callType, startTime, endTime, this));
+    }
+
+    public void calculateCallsCost(){
+        for (Map.Entry<String, Call> entry: callHistory.entrySet()) {
+            try {
+                totalCost += entry.getValue().calculateDurationCost(tariffType);
+            } catch (Exception e) {
+                System.out.println("отрицательная длительность разговора");
+            }
+        }
     }
 
     @Override
@@ -43,7 +52,7 @@ public class Subscriber {
                "------------------------------------------------------------------------------\n" +
                "| Call Type |   Start Time        |     End Time        | Duration |   Cost  |\n" +
                "------------------------------------------------------------------------------\n";
-        for (Map.Entry<String, Call> entry: callHistory.entrySet()) {
+       for (Map.Entry<String, Call> entry: callHistory.entrySet()) {
             returnString += entry.getValue() + "\n";
        }
         returnString += "------------------------------------------------------------------------------\n" +
@@ -73,15 +82,6 @@ public class Subscriber {
                 break;
         }
         return formattedTotalCoast;
-    }
-
-
-    public TariffType getTariffType() {
-        return tariffType;
-    }
-
-    public TreeMap<String, Call> getCallHistory() {
-        return callHistory;
     }
 
     public int getBonusPeriod() {

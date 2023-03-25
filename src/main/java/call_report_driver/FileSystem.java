@@ -31,6 +31,7 @@ public class FileSystem {
 
         for (Map.Entry<String, Subscriber> entry: Main.subscribersBase.entrySet()) {
             fileOutputStream = new FileOutputStream(directoryName + "\\" + entry.getKey() + "report.txt");
+            entry.getValue().calculateCallsCost();
             reportText = entry.getValue().toString();
             fileOutputStream.write(reportText.getBytes());
 

@@ -12,20 +12,14 @@ public class Call {
     private int duration;
     private double cost;
 
-    Call(String  callType, String startTime, String endTime, TariffType tariffType, Subscriber subscriber) {
+    Call(String  callType, String startTime, String endTime, Subscriber subscriber) {
         this.callType = callType;
         this.startTime = new StringBuilder(startTime);
         this.endTime = new StringBuilder(endTime);
         this.subscriber = subscriber;
-
-        try {
-            calculateDurationCost(tariffType);
-        } catch (Exception e) {
-            System.out.println("отрицательная длительность разговора");
-        }
     }
 
-    private void calculateDurationCost(TariffType tariffType) throws Exception {
+    public double calculateDurationCost(TariffType tariffType) throws Exception {
         duration = processTime(endTime) - processTime(startTime);
         if (duration < 0) {
             throw new Exception();
@@ -47,6 +41,7 @@ public class Call {
                 cost = durationInMinutes * tariffType.getPRICE_RATE();
             }
         }
+        return cost;
     }
 
     public int useBonusPeriod(int callDuration) {
@@ -95,8 +90,8 @@ public class Call {
         DecimalFormat dF = new DecimalFormat( "00" );
 
         return dF.format(duration/3600) + ":" +
-                                    dF.format(duration%3600/60) + ":" +
-                                    dF.format(duration%3600%60);
+                dF.format(duration%3600/60) + ":" +
+                dF.format(duration%3600%60);
     }
     public double  getCost() {
         return cost;
