@@ -13,23 +13,42 @@ public class Call {
     private int duration;
     private double cost;
 
-    Call(String  callType, String startTime, String endTime) {
+    Call(String  callType, String startTime, String endTime, TariffType tariffType) {
         this.callType = callType;
         this.startTime = new StringBuilder(startTime);
         this.endTime = new StringBuilder(endTime);
         try {
-            calculateDurationCost();
+            calculateDurationCost(tariffType);
         } catch (Exception e) {
             System.out.println("отрицательная длительность разговора");
         }
     }
 
-    private void calculateDurationCost() throws Exception {
+    private void calculateDurationCost(TariffType tariffType) throws Exception {
         duration = processTime(endTime) - processTime(startTime);
-        if(duration<0) {
+        if (duration < 0) {
             throw new Exception();
         }
-        cost = duration/60*0.5;  //TODO: менять стоимость в зависимости от тарифа и типа звонка
+
+        int durationInMinutes = duration / 60;
+
+        if(tariffType == TariffType.REGULAR && callType.equals("02")) {
+            cost = 0;
+        } else {
+            double remainingBonusPeriod = tariffType.useBonusPeriod(durationInMinutes);
+
+            if(remainingBonusPeriod > 0) {
+                cost = durationInMinutes * tariffType.getBONUS_PERIOD_RATE();
+
+            } else if(remainingBonusPeriod < 0) { // бонусный период закончился, а значит метод useBonusPeriod вернул
+                remainingBonusPeriod = -remainingBonusPeriod; // остаток длительности звонка вне бонусного периода со знаком минус
+
+                cost = (durationInMinutes - remainingBonusPeriod)*tariffType.getBONUS_PERIOD_RATE() //часть звонка по цене бонусного периода
+                        + remainingBonusPeriod * tariffType.getPRICE_RATE();  // остаток звонка вне бонусного периода по стандартной цене
+            } else {
+                cost = durationInMinutes * tariffType.getPRICE_RATE();
+            }
+        }
     }
 
     public int processTime(StringBuilder time) {

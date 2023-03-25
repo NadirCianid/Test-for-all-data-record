@@ -7,6 +7,7 @@ public class CDR_Reader {
     String endTime;
     String tariffType;
     String callType;
+    Subscriber currentSubscriber;
 
     public void processCdrRecord(String sdrRecord) {
         callType = sdrRecord.substring(0,2);
@@ -16,7 +17,8 @@ public class CDR_Reader {
         tariffType = sdrRecord.substring(49,51);
 
         if(Main.subscribersBase.containsKey(subscriberNumber)) {
-            Main.subscribersBase.get(subscriberNumber).newCallRecord(callType, startTime, endTime);
+            currentSubscriber =  Main.subscribersBase.get(subscriberNumber);
+           currentSubscriber.newCallRecord(callType, startTime, endTime, currentSubscriber.getTariffType());
         } else {
             Subscriber newSubscriber = new Subscriber(subscriberNumber, tariffType, callType, startTime, endTime);
             Main.subscribersBase.put(subscriberNumber, newSubscriber);
