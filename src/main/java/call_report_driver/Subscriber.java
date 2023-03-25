@@ -18,14 +18,12 @@ public class Subscriber {
     }
 
     public void newCallRecord(String  callType, String startTime, String endTime) {
-        System.out.print("adding new call record, callHistory : "  );
         callHistory.put(startTime, new Call(callType, startTime, endTime));
-        System.out.println(callHistory.size());
-        //totalCoast += getCallHistory().lastEntry().getValue().getCost();
+        totalCoast += getCallHistory().lastEntry().getValue().getCost();
     }
 
     @Override
-    public String toString() {
+    public String toString() { //TODO: написать логику создания нового отчета
        String returnString = "";
         for (Map.Entry<String, Call> entry: callHistory.entrySet()) {
             returnString += entry.getValue() + ";\n";

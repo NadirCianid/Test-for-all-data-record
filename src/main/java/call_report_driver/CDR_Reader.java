@@ -16,9 +16,7 @@ public class CDR_Reader {
         tariffType = sdrRecord.substring(49,51);
 
         if(Main.subscribersBase.containsKey(subscriberNumber)) {
-
             Main.subscribersBase.get(subscriberNumber).newCallRecord(callType, startTime, endTime);
-            System.out.println("there is such subscriber "+Main.subscribersBase.get(subscriberNumber));
         } else {
             Subscriber newSubscriber = new Subscriber(subscriberNumber, tariffType, callType, startTime, endTime);
             Main.subscribersBase.put(subscriberNumber, newSubscriber);

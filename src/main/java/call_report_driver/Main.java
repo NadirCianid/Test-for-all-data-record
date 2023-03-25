@@ -9,12 +9,9 @@ import java.util.concurrent.ForkJoinPool;
 public class Main {
     public static HashMap<String, Subscriber> subscribersBase = new HashMap<>();
     public static void main(String[] args) throws IOException {
-
-        //TODO: закончить метод
         FileSystem fileSystem = new FileSystem();
         fileSystem.readInputFile("cdrTest.txt");
 
         fileSystem.createReports("reports");
     }
-
 }
